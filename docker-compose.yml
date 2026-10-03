@@ -1,0 +1,56 @@
+services:
+  gateway:
+    build:
+      context: ./gateway/development/nginx/
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - frontend
+      - api
+    networks:
+      - app-network
+
+  frontend:
+    image: nginx:latest
+    volumes:
+      - ./frontend/public:/var/www/html/public
+      - ./frontend/development/docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - app-network
+
+  api:
+    build:
+      context: ./api/development/docker/ # в Dockerfile -> прокинется путь от папки docker (./api/development/docker/nginx/Dockerfile)
+      dockerfile: ./nginx/Dockerfile
+    volumes:
+      - ./api:/var/www/html
+    depends_on:
+      - api-php-fpm
+    networks:
+      - app-network
+
+  api-php-fpm:
+    build:
+      context: .
+      dockerfile: ./api/development/docker/php/Dockerfile
+    volumes:
+      - ./api:/var/www/html
+    networks:
+      - app-network
+
+  api-php-cli:
+    build:
+      context: .
+      dockerfile: ./api/development/docker/php-cli/Dockerfile
+    user: "1000:1000"
+    environment:
+      - COMPOSER_HOME=/var/www/html/var/.composer
+    volumes:
+      - ./api:/var/www/html
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
