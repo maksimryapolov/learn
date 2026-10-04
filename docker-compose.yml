@@ -34,6 +34,8 @@ services:
     build:
       context: .
       dockerfile: ./api/development/docker/php/Dockerfile
+    environment:
+      - APP_DEBUG=1
     volumes:
       - ./api:/var/www/html
     networks:

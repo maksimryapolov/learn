@@ -1,15 +1,19 @@
 <?php
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+
+use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = AppFactory::create();
+// TODO: может вынести в свой Kernel
+$builder = new ContainerBuilder();
+$builder->addDefinitions(__DIR__ . '/../config/dependencies.php');
+$container = $builder->build();
 
-$app->get('/', function (Request $request, Response $response, $args) {
-    $response->getBody()->write("{\"test\": 22}");
-    return $response;
-});
+$app = AppFactory::createFromContainer($container);
+
+$app->addErrorMiddleware($container->get('config')['debug'], false, false);
+
+(require __DIR__ . '/../config/routes/api.php')($app);
 
 $app->run();
