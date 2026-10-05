@@ -20,5 +20,8 @@ docker-pull:
 docker-build:
 	docker compose build
 
-api-install:
+api-init:
 	docker compose run --rm api-php-cli composer install
+
+api-install:
+	docker compose run --rm api-php-cli composer require $(PACKAGE)

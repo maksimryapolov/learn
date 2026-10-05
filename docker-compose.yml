@@ -40,6 +40,8 @@ services:
       - ./api:/var/www/html
     networks:
       - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   api-php-cli:
     build:
@@ -52,6 +54,8 @@ services:
       - ./api:/var/www/html
     networks:
       - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   app-network:
