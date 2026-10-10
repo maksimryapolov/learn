@@ -6,7 +6,10 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        }
     },
     "require": {
         "php": "^8.4",
@@ -14,5 +17,17 @@
         "slim/psr7": "^1.8",
         "slim/slim": "^4.15",
         "symfony/console": "^8.1"
+    },
+    "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.9",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "overtrue/phplint": "^9.7",
+        "phpstan/phpstan": "^2.3"
+    },
+    "scripts": {
+        "lint": "phplint",
+        "stan": "vendor/bin/phpstan analyse -c phpstan.neon",
+        "cs-fixer-check": "vendor/bin/php-cs-fixer check",
+        "cs-fixer-fix": "vendor/bin/php-cs-fixer fix"
     }
 }

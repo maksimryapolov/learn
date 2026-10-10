@@ -4,6 +4,8 @@ init: docker-down-clear docker-pull docker-build docker-up
 up: docker-up
 down: docker-down
 restart: down up
+lint: api-lint api-stan api-cs-check
+
 
 docker-up:
 	docker compose up -d
@@ -24,4 +26,16 @@ api-init:
 	docker compose run --rm api-php-cli composer install
 
 api-install:
-	docker compose run --rm api-php-cli composer require $(PACKAGE)
+	docker compose run --rm -e COMPOSER_IPRESOLVE=4 api-php-cli composer require $(PACKAGE)
+
+api-lint:
+	docker compose run --rm api-php-cli composer lint
+
+api-stan:
+	docker compose run --rm api-php-cli composer stan
+
+api-cs-check:
+	docker compose run --rm api-php-cli composer cs-fixer-check
+
+api-cs-fix:
+	docker compose run --rm api-php-cli composer cs-fixer-fix

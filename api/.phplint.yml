@@ -1,0 +1,7 @@
+Path: .
+Jobs: 5
+Extensions:
+  - php
+
+exclude: [vendor, var]
+cache-dir: ./var/.phplint-cache

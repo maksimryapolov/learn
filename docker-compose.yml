@@ -54,8 +54,8 @@ services:
       - ./api:/var/www/html
     networks:
       - app-network
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      # extra_hosts:
+      # - "host.docker.internal:host-gateway"
 
 networks:
   app-network:
