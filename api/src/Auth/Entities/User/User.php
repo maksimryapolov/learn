@@ -19,27 +19,27 @@ class User
     ) {
     }
 
-    public function getid(): Id
+    public function getId(): Id
     {
         return $this->id;
     }
 
-    public function getemail(): Email
+    public function getEmail(): Email
     {
         return $this->email;
     }
 
-    public function getpassword(): string
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function getdateCreate(): DateTimeImmutable
+    public function getDateCreate(): DateTimeImmutable
     {
         return $this->dateCreate;
     }
 
-    public function gettoken(): Token
+    public function getToken(): Token
     {
         return $this->token;
     }

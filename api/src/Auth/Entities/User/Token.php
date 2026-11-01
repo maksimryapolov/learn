@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Auth\Entities\User;
 
 use DateTimeImmutable;
+use Webmozart\Assert\Assert;
 
 class Token
 {
     public private(set) string $value {
         set {
-            $this->value = $value;
+            $this->value = Assert::stringNotEmpty($value);
         }
     }
 

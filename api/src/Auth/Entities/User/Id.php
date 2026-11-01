@@ -18,4 +18,9 @@ final class Id
     {
         $this->value = $value;
     }
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
 }
