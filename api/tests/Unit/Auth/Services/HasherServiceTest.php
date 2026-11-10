@@ -6,8 +6,10 @@ namespace Test\Unit\Auth\Services;
 
 use App\Auth\Services\HasherService;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(HasherService::class)]
 class HasherServiceTest extends TestCase
 {
     public function testPass()

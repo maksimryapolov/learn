@@ -11,9 +11,11 @@ use App\Auth\Services\HasherService;
 use App\Auth\Services\Tokenizer;
 use DateInterval;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
+#[CoversClass(User::class)]
 class UserTest extends TestCase
 {
     public function testCreate()
@@ -40,6 +42,7 @@ class UserTest extends TestCase
         $this->assertEquals(new DateTimeImmutable('2024-01-15 10:00:00'), $user->getDateCreate());
         $this->assertEquals($user->getToken()->getValue(), $token->getValue());
 
-        $this->assertTrue($user->isWait())
+        $this->assertTrue($user->isWait());
+        $this->assertFalse($user->isActive());
     }
 }

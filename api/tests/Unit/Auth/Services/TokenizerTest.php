@@ -9,8 +9,10 @@ use App\Auth\Services\Tokenizer;
 use DateInterval;
 use DateTimeImmutable;
 use Override;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(Tokenizer::class)]
 class TokenizerTest extends TestCase
 {
     #[Override]
