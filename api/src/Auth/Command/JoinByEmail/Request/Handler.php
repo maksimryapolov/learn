@@ -12,6 +12,7 @@ use App\Auth\Entities\User\UserRepositoryInterface as UserRepository;
 use App\Auth\Services\HasherService;
 use App\Auth\Services\Tokenizer;
 use DateTimeImmutable;
+use DomainException;
 use Symfony\Component\Uid\Uuid;
 
 class Handler
@@ -27,6 +28,10 @@ class Handler
     public function createUser(): void
     {
         $email = new Email($this->command->email);
+        if($this->userRepository->getByEmail($email)) {
+            throw new DomainException('Email is exsist');
+        }
+
         $dateTime = new DateTimeImmutable();
         $token = $this->tokenizer->generate($dateTime);
 

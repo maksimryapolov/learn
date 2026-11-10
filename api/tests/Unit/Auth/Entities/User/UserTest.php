@@ -39,5 +39,7 @@ class UserTest extends TestCase
         $this->assertTrue($hasher->validate('123312', $passwordHash));
         $this->assertEquals(new DateTimeImmutable('2024-01-15 10:00:00'), $user->getDateCreate());
         $this->assertEquals($user->getToken()->getValue(), $token->getValue());
+
+        $this->assertTrue($user->isWait())
     }
 }

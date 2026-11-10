@@ -6,6 +6,7 @@ namespace App\Auth\Entities\User;
 
 use App\Auth\Entities\User\Email;
 use App\Auth\Entities\User\Id;
+use App\Auth\Entities\User\StatusEnum;
 use DateTimeImmutable;
 
 class User
@@ -15,8 +16,19 @@ class User
         private Email $email,
         private string $password,
         private DateTimeImmutable $dateCreate,
-        private Token $token
+        private Token $token,
+        private StatusEnum $status = StatusEnum::wait
     ) {
+    }
+
+    public function isWait(): bool
+    {
+        return $this->status->isWait();
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status->isActive();
     }
 
     public function getId(): Id
