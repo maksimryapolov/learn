@@ -11,6 +11,7 @@ use App\Auth\Services\HasherService;
 use App\Auth\Services\Tokenizer;
 use DateInterval;
 use DateTimeImmutable;
+use DomainException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
@@ -44,5 +45,75 @@ class UserTest extends TestCase
 
         $this->assertTrue($user->isWait());
         $this->assertFalse($user->isActive());
+    }
+
+    public function testConfirm()
+    {
+        $email = new Email('test@bk.ru');
+        $dateTime = new DateTimeImmutable('2024-01-15 10:00:00');
+        $interval = new DateInterval('PT1H');
+        $idValue = Uuid::v7()->toString();
+        $hasher = new HasherService();
+        $passwordHash = $hasher->hash('123312');
+        $token = (new Tokenizer($interval))->generate($dateTime);
+
+        $user = new User(
+            new Id($idValue),
+            $email,
+            $passwordHash,
+            $dateTime,
+            $token
+        );
+
+        $user->confirmJoin($token->getValue(), $dateTime->modify('+30 minutes'));
+        $this->assertTrue($user->isActive());
+        $this->assertNull($user->getToken());
+        $this->assertFalse($user->isWait());
+    }
+
+    public function testExpired()
+    {
+        $email = new Email('test@bk.ru');
+        $dateTime = new DateTimeImmutable('2024-01-15 10:00:00');
+        $interval = new DateInterval('PT1H');
+        $idValue = Uuid::v7()->toString();
+        $hasher = new HasherService();
+        $passwordHash = $hasher->hash('123312');
+        $token = (new Tokenizer($interval))->generate($dateTime);
+
+        $user = new User(
+            new Id($idValue),
+            $email,
+            $passwordHash,
+            $dateTime,
+            $token
+        );
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessageIs('Token is expired.');
+        $user->confirmJoin($token->getValue(), $dateTime->modify('+65 minutes'));
+    }
+
+    public function testInvalid()
+    {
+        $email = new Email('test@bk.ru');
+        $dateTime = new DateTimeImmutable('2024-01-15 10:00:00');
+        $interval = new DateInterval('PT1H');
+        $idValue = Uuid::v7()->toString();
+        $hasher = new HasherService();
+        $passwordHash = $hasher->hash('123312');
+        $token = (new Tokenizer($interval))->generate($dateTime);
+
+        $user = new User(
+            new Id($idValue),
+            $email,
+            $passwordHash,
+            $dateTime,
+            $token
+        );
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessageIs('Token is invalid.');
+        $user->confirmJoin('123', $dateTime->modify('+65 minutes'));
     }
 }

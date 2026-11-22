@@ -7,6 +7,7 @@ namespace Test\Unit\Auth\Entities\User;
 use App\Auth\Entities\User\Token;
 use DateInterval;
 use DateTimeImmutable;
+use DomainException;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -40,5 +41,15 @@ class TokenTest extends TestCase
 
         $token = new Token('asdasdasdasd', $dateTime->sub($interval));
         $this->assertFalse($dateTime < $token->getExpires());
+    }
+
+    public function testValidate()
+    {
+        $dateTime = new DateTimeImmutable();
+        $interval = new DateInterval('PT1H');
+
+        $token = new Token('asdasdasdasd', $dateTime->sub($interval));
+        $this->expectException(DomainException::class);
+        $token->validate('aaaa', $dateTime);
     }
 }

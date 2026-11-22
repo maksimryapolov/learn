@@ -10,5 +10,10 @@ use App\Auth\Entities\User\User;
 interface UserRepositoryInterface
 {
     public function add(User $user): void;
+    public function findByToken(string $token): ?User;
+
+    /**
+     * @return User[]|null
+     */
     public function getByEmail(Email $email): ?array;
 }

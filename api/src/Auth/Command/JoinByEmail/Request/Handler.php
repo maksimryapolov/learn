@@ -18,17 +18,16 @@ use Symfony\Component\Uid\Uuid;
 class Handler
 {
     public function __construct(
-        private Command $command,
         private UserRepository $userRepository,
         private HasherService $hasher,
         private Tokenizer $tokenizer
     ) {
     }
 
-    public function createUser(): void
+    public function handle(Command $command): void
     {
-        $email = new Email($this->command->email);
-        if($this->userRepository->getByEmail($email)) {
+        $email = new Email($command->email);
+        if ($this->userRepository->getByEmail($email)) {
             throw new DomainException('Email is exsist');
         }
 
@@ -40,7 +39,7 @@ class Handler
         $user = new User(
             new Id(Uuid::v7()->toString()),
             $email,
-            $this->hasher->hash($this->command->password),
+            $this->hasher->hash($command->password),
             $dateTime,
             $token
         );

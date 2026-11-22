@@ -8,6 +8,7 @@ use App\Auth\Entities\User\Email;
 use App\Auth\Entities\User\Id;
 use App\Auth\Entities\User\StatusEnum;
 use DateTimeImmutable;
+use DomainException;
 
 class User
 {
@@ -16,8 +17,8 @@ class User
         private Email $email,
         private string $password,
         private DateTimeImmutable $dateCreate,
-        private Token $token,
-        private StatusEnum $status = StatusEnum::wait
+        private ?Token $token,
+        private StatusEnum $status = StatusEnum::wait,
     ) {
     }
 
@@ -51,8 +52,31 @@ class User
         return $this->dateCreate;
     }
 
-    public function getToken(): Token
+    public function getToken(): ?Token
     {
         return $this->token;
+    }
+
+    public function confirmJoin(string $token, DateTimeImmutable $dateTime): void
+    {
+        if ($this->token === null) {
+            throw new DomainException('Confirmation is not required.');
+        }
+
+        $this->token->validate($token, $dateTime);
+        $this->status = StatusEnum::active;
+        $this->token = null;
+    }
+
+    public function resetToken(): void
+    {
+        $this->token = null;
+    }
+
+    public function setStatus(StatusEnum $status): void
+    {
+        if ($this->status !== $status) {
+            $this->status = $status;
+        }
     }
 }
